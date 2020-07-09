@@ -59,8 +59,8 @@ public:
     void attach(pin_t pin, PinMode mode, uint32_t intervalMillis);
 
     /**
-     * @brief Attach to pin, sets pin mode, debounce time, and attach the 
-     * callback function
+     * @brief Attach the callback function, and interval in milliseconds. This
+     * is intended for the callback function to return the signal state.
      *
      * @details called to attach the neccessary parameters for debouncing. The 
      * callback function is used so the programmer can write their own custom
@@ -68,13 +68,10 @@ public:
      * digitalRead() is needed. If a basic digitalRead() is sufficient to read
      * the pin, just use one of the above attach() functions.
      *
-     * @param[in] pin - signal pin to debounce signal
-     * @param[in] mode - pin mode (i.e PULL UP, PULL DOWN, etc)
-     * @param[in] intervalMillis - debounce interval
      * @param[in] read_cb - callback function to do the reading of the signal
+     * @param[in] intervalMillis - debounce interval
      */
-    void attach(pin_t pin, PinMode mode, 
-                uint32_t intervalMillis, std::function<int32_t(pin_t)> read_cb);
+    void attach(std::function<int32_t(void)> read_cb, uint32_t intervalMillis);
 
     /**
      * @brief Sets the debounce interval
@@ -147,8 +144,18 @@ public:
      */
     bool isLow();
 
+private:
+    /**
+     * @brief Starts up the debounce counters and time
+     *
+     * @details Sets the state to zero, starts the timer, and sets up the 
+     * counters
+     */
+    void start();
+
+
 protected:
-    std::function<int32_t(pin_t)> _read_cb;
+    std::function<int32_t(void)> _read_cb;
     uint32_t _previousMillis;
     uint32_t _intervalMillis;
     uint8_t _state;

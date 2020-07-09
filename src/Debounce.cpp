@@ -29,11 +29,7 @@ Debounce::Debounce()
 void Debounce::attach(pin_t pin)
 {
     _pin = pin;
-    _state = 0;
-    if ((_read_cb) ? _read_cb(_pin) : digitalRead(_pin)) {
-        _state = _BV(DEBOUNCE_STATE_DEBOUNCED) | _BV(DEBOUNCE_STATE_UNSTABLE);
-    }
-    _previousMillis = millis();
+    start();
 }
 
 void Debounce::attach(pin_t pin, PinMode mode)
@@ -44,18 +40,15 @@ void Debounce::attach(pin_t pin, PinMode mode)
 
 void Debounce::attach(pin_t pin, PinMode mode, uint32_t intervalMillis)
 {
-    pinMode(pin, mode);
-    _intervalMillis = intervalMillis;
-    attach(pin);
+    attach(pin, mode);
+    interval(intervalMillis);
 }
 
-void Debounce::attach(pin_t pin, PinMode mode, uint32_t intervalMillis, 
-                            std::function<int32_t(pin_t)> read_cb)
+void Debounce::attach(std::function<int32_t(void)> read_cb, uint32_t intervalMillis)
 {
-    pinMode(pin, mode);
-    _intervalMillis = intervalMillis;
+    interval(intervalMillis);
     _read_cb = read_cb;
-    attach(pin);
+    start();
 }
 
 void Debounce::interval(uint32_t intervalMillis)
@@ -63,10 +56,19 @@ void Debounce::interval(uint32_t intervalMillis)
     _intervalMillis = intervalMillis;
 }
 
+void Debounce::start()
+{
+    _state = 0;
+    if ((_read_cb) ? _read_cb() : digitalRead(_pin)) {
+        _state = _BV(DEBOUNCE_STATE_DEBOUNCED) | _BV(DEBOUNCE_STATE_UNSTABLE);
+    }
+    _previousMillis = millis();
+}
+
 bool Debounce::update()
 {
     // Read the state of the switch in a temporary variable.
-    bool currentState = (_read_cb) ? _read_cb(_pin) : digitalRead(_pin);
+    bool currentState = (_read_cb) ? _read_cb() : digitalRead(_pin);
     return update(currentState);
 }
 

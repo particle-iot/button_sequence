@@ -26,7 +26,7 @@ class ButtonSequence {
 public:
 
     /**
-     * @brief Basic constructor
+     * @brief Constructor for using hardware pins to debounce a signal
      *
      * @details Create an instance of ButtonSequence. Calls the 
      * debounce.attach() with debounce interval, pin, and pin mode
@@ -42,20 +42,17 @@ public:
                 system_tick_t long_duration_interval = DEFAULT_LONG_CLICK_MS);
 
     /**
-     * @brief Full constructor with callback to read a signal to debounce
+     * @brief Constructor for using a callback to output a signal and debounce
+     * it
      *
-     * @details Create an instance of ButtonSequence. Calls the 
-     * debounce.attach() with debounce interval, pin, pin mode, and read_cb
+     * @details Create an instance of ButtonSequence. calls Debounce.start()
      *
      * @param[in] read_cb - callback to do custom read of signal
-     * @param[in] button_pin - pin to debounce
-     * @param[in] mode - mode of the pin (i.e INPUT, PULLUP, PULLDOWN)
      * @param[in] active_low - pin logic high on or logic low on
      * @param[in] debounce_interval - milli sec debounce time
      * @param[in] long_duration_interval - milli sec long click time
      */
-    ButtonSequence(std::function<int32_t(pin_t)> read_cb, pin_t button_pin, 
-                PinMode mode, bool active_low = false,
+    ButtonSequence(std::function<int32_t(void)> read_cb, bool active_low, 
                 system_tick_t debounce_interval = DEFAULT_DEBOUNCE_MS, 
                 system_tick_t long_duration_interval = DEFAULT_LONG_CLICK_MS);
 
