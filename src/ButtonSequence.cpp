@@ -39,14 +39,14 @@ ButtonSequence::ButtonSequence(std::function<int32_t(pin_t)> read_cb,
     debounce_button.attach(button_pin, mode, debounce_interval, read_cb);
 }
 
-int32_t ButtonSequence::check_button()
+int32_t ButtonSequence::update_sequence(bool state_changed)
 {
     static system_tick_t long_press_timeout = 0, short_depress_timeout = 0;
     static bool pressed = false;
     static int32_t click_count = 0;
     int32_t returnval = 0;
 
-    if(debounce_button.update()) {
+    if(state_changed) {
         auto switch_state = debounce_button.read();
         pressed = (_active_low) ?  !switch_state : switch_state;
 
@@ -77,6 +77,18 @@ int32_t ButtonSequence::check_button()
     }
 
     return returnval;
+}
+
+int32_t ButtonSequence::check_button()
+{
+    bool state_changed = debounce_button.update();
+    return update_sequence(state_changed);
+}
+
+int32_t ButtonSequence::check_button(bool current_state)
+{
+    bool state_changed = debounce_button.update(current_state);
+    return update_sequence(state_changed);
 }
 
 void ButtonSequence::set_long_interval(system_tick_t long_duration_interval)

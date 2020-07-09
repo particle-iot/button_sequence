@@ -86,7 +86,9 @@ public:
     void interval(uint32_t intervalMillis);
 
     /**
-     * @brief Update the debouce counters, and check for a stable signal
+     * @brief Update the debouce counters, and check for a stable signal. This
+     * version of update will read the digial pin or use the callback to get
+     * the signal value
      *
      * @details updates the bit states for the pin, and check against the 
      * debounce time, if it is stable return that the state changed
@@ -96,38 +98,52 @@ public:
     bool update();
 
     /**
-     * @brief Get the updated pin state
+     * @brief Pass the signal value, Update the debouce counters, and check 
+     * for a stable signal. This version of update has to have the value passed
+     * to it
+     *
+     * @details updates the bit states for the signal, and check against the 
+     * debounce time, if it is stable return that the state changed
      * 
-     * @return Returns the updated pin state. True for logic high, 
+     * @param[in] value - signal value that will be debounced
+     *
+     * @return 1 if the state changed, 0 if the state did not change
+     */
+    bool update(bool value);
+
+    /**
+     * @brief Get the updated signal state
+     * 
+     * @return Returns the updated signal state. True for logic high, 
      * false for logic low
      */
     bool read();
     
     /**
-     * @brief Updates the pin and returns the debounced state
+     * @brief Updates the state and returns the debounced state
      *
      * @details Calls update() first, then calls read()
      *
-     * @return Returns the updated pin state. True for logic high, 
+     * @return Returns the updated signal state. True for logic high, 
      * false for logic low
      */
     bool updateRead();
 
     /**
-     * @brief Updates the pin and returns true if the pin is debounced HIGH
+     * @brief Updates the state and returns true if the signal is debounced HIGH
      *
      * @details Calls update() and then tests the output of read()
      *
-     * @return true if the pin is debounced HIGH, false if not
+     * @return true if the signal is debounced HIGH, false if not
      */
     bool isHigh();
 
     /**
-     * @brief Updates the pin and returns true if the pin is debounced LOW
+     * @brief Updates the state and returns true if the signal is debounced LOW
      *
      * @details Calls update() and then tests the output of read()
      *
-     * @return true if the pin is debounced LOW, false if not
+     * @return true if the signal is debounced LOW, false if not
      */
     bool isLow();
 

@@ -67,6 +67,11 @@ bool Debounce::update()
 {
     // Read the state of the switch in a temporary variable.
     bool currentState = (_read_cb) ? _read_cb(_pin) : digitalRead(_pin);
+    return update(currentState);
+}
+
+bool Debounce::update(bool currentState)
+{
     _state &= ~_BV(DEBOUNCE_STATE_CHANGED);
 
     // If the read is different from last reading, reset the debounce counter
@@ -97,17 +102,17 @@ bool Debounce::read()
 bool Debounce::updateRead()
 {
     update();
-    return _state & _BV(DEBOUNCE_STATE_DEBOUNCED);
+    return read();
 }
 
 bool Debounce::isHigh()
 {
     update();
-    return ( _state & _BV(DEBOUNCE_STATE_DEBOUNCED) );
+    return ( read() );
 }
 
 bool Debounce::isLow()
 {
     update();
-    return !( _state & _BV(DEBOUNCE_STATE_DEBOUNCED) );
+    return !( read() );
 }

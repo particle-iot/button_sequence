@@ -60,21 +60,31 @@ public:
                 system_tick_t long_duration_interval = DEFAULT_LONG_CLICK_MS);
 
     /**
-     * @brief Update the debounce counters and check if that state was 
-     * debounced. If so determine if it was a press or depress, increment the 
-     * click count if pressed, and setup the appropriate sequence termination
-     * timers
+     * @brief Checks the button sequence. This version is inteded to debounce
+     * a signal from a pin or callback function
      *
      * @details Function calls debounce.update(), determines if there is a 
-     * debounced state change. Determines pressed or depressed state, and checks
-     * to see if the sequence has been terminated due to a long click, or short
-     * click finished
+     * debounced state change.
      *
      * @return 0 if no button click or sequence in progress, positive click 
      * count if short click sequence detected, negative click count if long 
      * click terminates the short click sequence or a single long click detected
      */
     int32_t check_button();
+
+    /**
+     * @brief Checks the button sequence. This version is inteded to debounce
+     * a signal that is passed to it through it's input parameter
+     *
+     * @details Function calls debounce.update(), determines if there is a 
+     * debounced state change.
+     * 
+     *
+     * @return 0 if no button click or sequence in progress, positive click 
+     * count if short click sequence detected, negative click count if long 
+     * click terminates the short click sequence or a single long click detected
+     */
+    int32_t check_button(bool current_state);
 
     /**
      * @brief Set the _long_duration_interval
@@ -97,8 +107,25 @@ public:
 
 private:
 
+    /**
+     * @brief Update the debounce counters and check if that state was 
+     * debounced. If so determine if it was a press or depress, increment the 
+     * click count if pressed, and setup the appropriate sequence termination
+     * timers
+     *
+     * @details Determines pressed or depressed state, and checks
+     * to see if the sequence has been terminated due to a long click, or short
+     * click finished
+     * 
+     * @param[in] state_changed - bool if the debounced state_changed
+     *
+     * @return 0 if no button click or sequence in progress, positive click 
+     * count if short click sequence detected, negative click count if long 
+     * click terminates the short click sequence or a single long click detected
+     */
+    int32_t update_sequence(bool state_changed);
+
     Debounce  debounce_button;
-    int32_t button_click_count;
     system_tick_t _long_duration_interval;
     bool _active_low;
 };
