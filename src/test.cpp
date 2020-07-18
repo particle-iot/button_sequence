@@ -17,7 +17,7 @@ int32_t click_count;
 void setup() {
   // Put initialization like pinMode and begin functions here.
     Serial.begin(9600); 
-    button  = new ButtonSequence(SWITCH_2, INPUT, true);
+    button  = new ButtonSequence(SWITCH_2, INPUT, ActiveLevel::LOW);
 }
 
 // loop() runs over and over again, as quickly as it can execute.

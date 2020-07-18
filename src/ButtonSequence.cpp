@@ -22,20 +22,21 @@
 
 #define SHORT_CLICK_TIMEOUT_MS 500
 
-ButtonSequence::ButtonSequence(pin_t button_pin, PinMode mode, bool active_low, 
-        system_tick_t debounce_interval, system_tick_t long_duration_interval) :
-        _long_duration_interval(long_duration_interval), 
-        _active_low(active_low)
+ButtonSequence::ButtonSequence(pin_t button_pin, PinMode mode, 
+        ActiveLevel active_level, system_tick_t debounce_interval, 
+        system_tick_t long_duration_interval) :
+        _long_duration_interval(long_duration_interval)
 {
+    _active_low = (active_level == ActiveLevel::LOW) ? true : false;
     debounce_button.attach(button_pin, mode, debounce_interval);
 }
 
 ButtonSequence::ButtonSequence(std::function<int32_t(void)> read_cb, 
-                        bool active_low, system_tick_t debounce_interval, 
-                        system_tick_t long_duration_interval) :
-        _long_duration_interval(long_duration_interval),
-        _active_low(active_low)
+                    ActiveLevel active_level, system_tick_t debounce_interval, 
+                    system_tick_t long_duration_interval) :
+        _long_duration_interval(long_duration_interval)
 {
+    _active_low = (active_level == ActiveLevel::LOW) ? true : false;
     debounce_button.attach(read_cb, debounce_interval);
 }
 

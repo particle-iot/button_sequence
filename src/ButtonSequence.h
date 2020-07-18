@@ -18,6 +18,7 @@
 #pragma once
 
 #include "Debounce.h"
+#include "types.h"
 
 #define DEFAULT_DEBOUNCE_MS 50
 #define DEFAULT_LONG_CLICK_MS 5000
@@ -33,11 +34,11 @@ public:
      *
      * @param[in] button_pin - pin to debounce
      * @param[in] mode - mode of the pin (i.e INPUT, PULLUP, PULLDOWN)
-     * @param[in] active_low - pin logic high on or logic low on
+     * @param[in] active_level - pin logic high on or logic low on
      * @param[in] debounce_interval - milli sec debounce time
      * @param[in] long_duration_interval - milli sec long click time
      */
-    ButtonSequence(pin_t button_pin, PinMode mode, bool active_low = false, 
+    ButtonSequence(pin_t button_pin, PinMode mode, ActiveLevel active_level, 
                 system_tick_t debounce_interval = DEFAULT_DEBOUNCE_MS, 
                 system_tick_t long_duration_interval = DEFAULT_LONG_CLICK_MS);
 
@@ -48,11 +49,11 @@ public:
      * @details Create an instance of ButtonSequence. calls Debounce.start()
      *
      * @param[in] read_cb - callback to do custom read of signal
-     * @param[in] active_low - pin logic high on or logic low on
+     * @param[in] active_level - pin logic high on or logic low on
      * @param[in] debounce_interval - milli sec debounce time
      * @param[in] long_duration_interval - milli sec long click time
      */
-    ButtonSequence(std::function<int32_t(void)> read_cb, bool active_low, 
+    ButtonSequence(std::function<int32_t(void)> read_cb, ActiveLevel active_level, 
                 system_tick_t debounce_interval = DEFAULT_DEBOUNCE_MS, 
                 system_tick_t long_duration_interval = DEFAULT_LONG_CLICK_MS);
 
