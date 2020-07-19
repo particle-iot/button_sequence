@@ -42,7 +42,8 @@ ButtonSequence::ButtonSequence(std::function<int32_t(void)> read_cb,
 
 int32_t ButtonSequence::update_sequence(bool state_changed)
 {
-    static system_tick_t long_press_timeout = 0, short_depress_timeout = 0;
+    static system_tick_t long_press_timeout = 0, short_depress_timeout = 0,
+    start_time = 0;
     static bool pressed = false;
     static int32_t click_count = 0;
     int32_t returnval = 0;
@@ -53,8 +54,9 @@ int32_t ButtonSequence::update_sequence(bool state_changed)
 
         if(pressed){click_count++;}
 
-        if(pressed) {long_press_timeout = millis() + _long_duration_interval;}
-        else {short_depress_timeout = millis() + SHORT_CLICK_TIMEOUT_MS;}   
+        start_time = millis();
+        if(pressed) {long_press_timeout = _long_duration_interval;}
+        else {short_depress_timeout = SHORT_CLICK_TIMEOUT_MS;}   
     }
     //state didn't change, check sequence termination
     else {
@@ -62,14 +64,14 @@ int32_t ButtonSequence::update_sequence(bool state_changed)
         if(click_count) {
             if(pressed) {
                 //check if long press was used to terminate the sequence
-                if(millis() > long_press_timeout) {
+                if(millis() - start_time > long_press_timeout) {
                     returnval = (-1*click_count);
                     click_count = 0;
                 }
             }
             else {
                 //check if short depress terminates the sequence
-                if(millis() > short_depress_timeout) {
+                if(millis() - start_time > short_depress_timeout) {
                     returnval = click_count;
                     click_count = 0;
                 }

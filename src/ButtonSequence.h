@@ -71,7 +71,7 @@ public:
     int32_t check_button();
 
     /**
-     * @brief Checks the button sequence. This version is inteded to debounce
+     * @brief Checks the button sequence. This version is intended to debounce
      * a signal that is passed to it through it's input parameter
      *
      * @details Function calls debounce.update(), determines if there is a 
