@@ -68,7 +68,7 @@ public:
      * count if short click sequence detected, negative click count if long 
      * click terminates the short click sequence or a single long click detected
      */
-    int32_t check_button();
+    int check_button();
 
     /**
      * @brief Checks the button sequence. This version is intended to debounce
@@ -82,7 +82,7 @@ public:
      * count if short click sequence detected, negative click count if long 
      * click terminates the short click sequence or a single long click detected
      */
-    int32_t check_button(bool current_state);
+    int check_button(bool current_state);
 
     /**
      * @brief Set the _long_duration_interval
@@ -121,7 +121,7 @@ private:
      * count if short click sequence detected, negative click count if long 
      * click terminates the short click sequence or a single long click detected
      */
-    int32_t update_sequence(bool state_changed);
+    int update_sequence(bool state_changed);
 
     Debounce  debounce_button;
     system_tick_t _long_duration_interval;
